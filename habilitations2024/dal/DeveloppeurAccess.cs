@@ -93,6 +93,38 @@ namespace habilitations2024.dal
                             lesDeveloppeurs.Add(developpeur);
                         }
                     }
+
+                    // Test unitaire : vérification du nombre de développeurs par profil
+                    if (idProfil > 0)
+                    {
+                        // Récupération du nombre de développeurs attendu pour ce profil
+                        string reqCount = "SELECT COUNT(*) FROM developpeur WHERE idprofil = @idprofil";
+                        Dictionary<string, object> paramCount = new Dictionary<string, object>();
+                        paramCount.Add("@idprofil", idProfil);
+                        List<Object[]> countResult = access.Manager.ReqSelect(reqCount, paramCount);
+                        int expectedCount = Convert.ToInt32(countResult[0][0]);
+
+                        // Affichage du résultat du test
+                        Console.WriteLine("Test unitaire GetLesDeveloppeurs (profil spécifique) :");
+                        Console.WriteLine($"Profil ID {idProfil} - Nombre de développeurs attendu : {expectedCount}");
+                        Console.WriteLine($"Nombre de développeurs obtenu : {lesDeveloppeurs.Count}");
+                        Console.WriteLine($"Test réussi : {expectedCount == lesDeveloppeurs.Count}");
+                        Console.WriteLine("----------------------------------------");
+                    }
+                    else
+                    {
+                        // Récupération du nombre total de développeurs attendu
+                        string reqCount = "SELECT COUNT(*) FROM developpeur";
+                        List<Object[]> countResult = access.Manager.ReqSelect(reqCount);
+                        int expectedCount = Convert.ToInt32(countResult[0][0]);
+
+                        // Affichage du résultat du test
+                        Console.WriteLine("Test unitaire GetLesDeveloppeurs (tous les profils) :");
+                        Console.WriteLine($"Nombre total de développeurs attendu : {expectedCount}");
+                        Console.WriteLine($"Nombre de développeurs obtenu : {lesDeveloppeurs.Count}");
+                        Console.WriteLine($"Test réussi : {expectedCount == lesDeveloppeurs.Count}");
+                        Console.WriteLine("----------------------------------------");
+                    }
                 }
                 catch (Exception e)
                 {
